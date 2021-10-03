@@ -1,0 +1,118 @@
+object frmNFSeLavras: TfrmNFSeLavras
+  Left = 461
+  Height = 586
+  Top = 61
+  Width = 1181
+  Caption = 'NFSe - LAVRAS/MG'
+  ClientHeight = 586
+  ClientWidth = 1181
+  OnCreate = FormCreate
+  LCLVersion = '2.0.12.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 54
+    Top = 532
+    Width = 1181
+    Align = alBottom
+    ClientHeight = 54
+    ClientWidth = 1181
+    TabOrder = 0
+    object btXML: TBitBtn
+      Left = 1000
+      Height = 30
+      Top = 8
+      Width = 160
+      Caption = 'Carregar XML NFS-e'
+      OnClick = btXMLClick
+      TabOrder = 0
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 532
+    Top = 0
+    Width = 1181
+    Align = alClient
+    Caption = 'Panel2'
+    ClientHeight = 532
+    ClientWidth = 1181
+    TabOrder = 1
+    object Panel3: TPanel
+      Left = 1
+      Height = 255
+      Top = 1
+      Width = 1179
+      Align = alTop
+      Caption = 'Panel3'
+      ClientHeight = 255
+      ClientWidth = 1179
+      TabOrder = 0
+      object DBGrid1: TDBGrid
+        Left = 1
+        Height = 253
+        Top = 1
+        Width = 1177
+        Align = alClient
+        Color = clWindow
+        Columns = <>
+        DataSource = dsNFe
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert]
+        TabOrder = 0
+      end
+    end
+    object Panel4: TPanel
+      Left = 1
+      Height = 275
+      Top = 256
+      Width = 1179
+      Align = alClient
+      ClientHeight = 275
+      ClientWidth = 1179
+      TabOrder = 1
+      object DBGrid2: TDBGrid
+        Left = 1
+        Height = 273
+        Top = 1
+        Width = 1177
+        Align = alClient
+        Color = clWindow
+        Columns = <>
+        DataSource = dsItem
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert]
+        TabOrder = 0
+      end
+    end
+  end
+  object bfNFe: TBufDataset
+    FieldDefs = <>
+    Left = 57
+    Top = 21
+  end
+  object dsNFe: TDataSource
+    DataSet = bfNFe
+    Left = 160
+    Top = 21
+  end
+  object ActionList1: TActionList
+    Left = 384
+    Top = 21
+    object DefineBufFields: TAction
+      Caption = 'DefineBufFields'
+      OnExecute = DefineBufFieldsExecute
+    end
+  end
+  object bfItem: TBufDataset
+    FieldDefs = <>
+    Left = 57
+    Top = 96
+  end
+  object dsItem: TDataSource
+    DataSet = bfItem
+    Left = 160
+    Top = 96
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 944
+    Top = 528
+  end
+end
