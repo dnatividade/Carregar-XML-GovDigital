@@ -1,3 +1,23 @@
+{
+ Este software foi escrito para auxiliar na importação das notas fiscais de
+ serviço eletrônica (NFSe), através do XML gerado pelo sistema da Sonner
+ (www.sonner.com.br) usado pela Prefeitura Municipal da cidade de Lavras/MG, no
+ endereço eletrônico: nfe-cidades.com.br (antigo govdigital.com.br).
+
+ O sistema importa o arquivo XML gerado e cria um dataset com as notas fiscais
+ presentes no mesmo. O XML pode conter uma ou mais notas fiscais.
+
+ Declaro que NÃO TEMOS VINCULO ALGUM com a empresa Sonner.
+
+ Este software e todos os seus fontes estão licenciados pelos termos da MIT.
+ Um arquivo chamado LICENSING está presente na raíz do diretório, com os termos
+ da licença.
+
+ ###############################################################################
+ Autor: DNatividade
+ Data: 2021-10-03
+ ###############################################################################
+}
 unit Unit1;
 
 {$mode objfpc}{$H+}
@@ -54,7 +74,8 @@ var
   doc: TXMLDocument;
   nEmissao, nNFE,
   nNItens, nNItens2, nIItens: TDOMNode;
-  filename: string;
+  filename, line: string;
+  found: integer;
   arq: TextFile;
 
   ID_NFE, ID_ITEM: integer;
@@ -63,9 +84,34 @@ begin
   if OpenDialog1.Execute then
   begin
     try
+      found:= 0;
       //Read XML file from disk
       filename:= OpenDialog1.FileName;
       AssignFile(arq, filename);
+
+      //checa se é um arquivo XML valido (procura por <GovGidital>)
+      Reset(arq);
+      While not Eof(arq) do
+      begin
+        readln(arq, line);
+        if Pos('<GovDigital>', line) <> 0 then
+        begin
+          found:= 1;
+          break;
+        end;
+      end;
+
+      if found = 0 then
+      begin
+        ShowMessage('Arquivo XML inválido!');
+        Abort; //aborta o carregamento do arquivo caso não seja um XML válido
+      end;
+      finally
+        CloseFile(arq);
+      end;
+
+    try
+      //reabre o arquivo
       Reset(arq);
       ReadXMLFile(doc, arq);
 
@@ -132,7 +178,6 @@ begin
                 else if nNItens2.NodeName = 'inscEst' then
                   bfNFe.FieldByName('inscEstP').AsString:= nNItens2.TextContent;
 
-                //bfNFe.Post;
                 nNItens2:= nNItens2.NextSibling;
               end;
             end
@@ -173,7 +218,6 @@ begin
                 else if nNItens2.NodeName = 'inscEst' then
                   bfNFe.FieldByName('inscEstT').AsString:= nNItens2.TextContent;
 
-                //bfNFe.Post;
                 nNItens2:= nNItens2.NextSibling;
               end;
             end
@@ -254,11 +298,7 @@ begin
 end;
 
 
-
-
 procedure TfrmNFSeLavras.DefineBufFieldsExecute(Sender: TObject);
-var i: integer;
-
 begin
   Try
     //dados da nota fiscal
@@ -326,7 +366,6 @@ begin
     bfItem.CreateDataset;
     //
     //
-    //bfNFe.Active:= true;
     bfNFe.Open;
     bfItem.Open;
   finally
